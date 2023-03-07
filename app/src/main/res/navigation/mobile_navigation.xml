@@ -13,13 +13,20 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.guillermobosca.tfg.ui.dashboard.DashboardFragment"
+        android:name="com.guillermobosca.tfg.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/navigation_search"
-        android:name="com.guillermobosca.tfg.ui.notifications.NotificationsFragment"
+        android:name="com.guillermobosca.tfg.ui.search.SearchFragment"
         android:label="@string/title_search"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_search" />
+
+    <fragment
+        android:id="@+id/navigation_messages"
+        android:name="com.guillermobosca.tfg.ui.messages.MessagesFragment"
+        android:label="@string/title_messages"
+        tools:layout="@layout/fragment_messages" />
+
 </navigation>
