@@ -1,1 +1,1 @@
-# app-finalproject
+# Android App as my final Project
