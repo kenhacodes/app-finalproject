@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_darkblue"
+    android:backgroundTint="@color/background_darkblue"
+    android:paddingLeft="50dp"
+    android:paddingTop="100dp"
+    android:paddingRight="50dp"
+    android:paddingBottom="150dp"
+    tools:context=".ui.loginProcess.StartFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="0dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:paddingBottom="40dp"
+            android:text="@string/welcome"
+            android:textAlignment="center"
+            android:textColor="#EAEAEA"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/action_sign_up"
+            android:textAlignment="center"
+            android:textColor="#DDDDDD"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_startfrag_creator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:backgroundTint="#353B6E"
+            android:text="@string/artist"
+            android:textColor="#E3E3E3" />
+
+        <Button
+            android:id="@+id/btn_startfrag_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:backgroundTint="#353B6E"
+            android:text="@string/user"
+            android:textColor="#E3E3E3" />
+
+        <Button
+            android:id="@+id/btn_startfrag_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#353B6E"
+            android:text="@string/login"
+            android:textColor="#E3E3E3" />
+
+        <Button
+            android:id="@+id/btn_startfrag_justlookng"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="#00FFFFFF"
+            android:text="@string/enter_no_login"
+            android:textColor="#A8A8A8"
+            android:textSize="12sp" />
+    </LinearLayout>
+</FrameLayout>
