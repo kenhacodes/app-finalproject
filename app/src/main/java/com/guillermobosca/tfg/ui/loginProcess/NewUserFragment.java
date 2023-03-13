@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.functions.FirebaseFunctions;
@@ -23,6 +24,7 @@ import com.guillermobosca.tfg.R;
 import com.guillermobosca.tfg.databinding.FragmentNewUserBinding;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,7 +44,7 @@ public class NewUserFragment extends Fragment {
 
     private static final String FUNCTION_URL = "https://us-central1-tfg-backend-464ed.cloudfunctions.net/helloWorld";
     private FragmentNewUserBinding binding;
-
+    private FirebaseFunctions mFunctions;
 
     public NewUserFragment() {
         // Required empty public constructor
@@ -79,40 +81,103 @@ public class NewUserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         // Inflate the layout for this fragment
         binding = FragmentNewUserBinding.inflate(inflater, container, false);
-
+        mFunctions = FirebaseFunctions.getInstance("us-central1");
         //Button Enter
         binding.btnNewuserfragEnter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                callHelloWorldFunction(getContext());
+                String name = binding.txtNewuserfragUser.getText().toString();
+                String email = binding.txtNewuserfragEmail.getText().toString();
+                String password = binding.txtNewuserfragPassword.getText().toString();
+
+                callcheckUserVaild(name, email, password)
+                        .addOnCompleteListener(new OnCompleteListener<HashMap>() {
+                            @Override
+                            public void onComplete(@NonNull Task<HashMap> task) {
+                                if (task.isSuccessful()) {
+                                    HashMap result = task.getResult();
+                                    Log.d("Result", result.toString());
+                                    Toast.makeText(getContext(), result.toString(), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Exception e = task.getException();
+                                    if (e instanceof Exception) {
+                                        Log.e("Error", "Error", e);
+                                    }
+                                }
+                            }
+                        }
+                );
+
+
+                /*
+                callHelloWorld(name)
+                    .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (task.isSuccessful()) {
+                            String result = task.getResult();
+                            Log.d("Result", result);
+                            Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Exception e = task.getException();
+                            if (e instanceof Exception) {
+                                Log.e("Error", "Error", e);
+                            }
+                        }
+                    }
+                });
+                 */
+
 
             }
         });
 
-
         return binding.getRoot();
     }
-    private void callHelloWorldFunction(Context context) {
 
-        // Initialize a FirebaseFunctions instance
-        FirebaseFunctions functions = FirebaseFunctions.getInstance();
-
-        // Call the "helloWorld" function and handle the result
-        functions.getHttpsCallable("helloWorld")
-                .call()
-                .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
+    private Task<HashMap> callcheckUserVaild(String username, String email, String password) {
+        // Create the arguments to the callable function.
+        Map<String, Object> data = new HashMap<>();
+        data.put("username", username);
+        data.put("email", email);
+        data.put("password", password);
+        data.put("push", true);
+        Log.d("DebugFirebase", "callcheckUserVaild: 1");
+        return mFunctions
+                .getHttpsCallable("checkUserVaild")
+                .call(data)
+                .continueWith(new Continuation<HttpsCallableResult, HashMap>() {
                     @Override
-                    public void onSuccess(HttpsCallableResult result) {
-                        // Get the response from the function
-                        String response = (String) result.getData();
-
-
-                        binding.btnNewuserfragEnter.setText(response);
+                    public HashMap then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        Log.d("DebugFirebase", "callcheckUserVaild: 2");
+                        HashMap result = (HashMap) task.getResult().getData();
+                        Log.d("DebugFirebase", "callcheckUserVaild: 3");
+                        return result;
                     }
                 });
     }
+
+    /*
+    private Task<String> callHelloWorld(String text) {
+        // Create the arguments to the callable function.
+        Map<String, Object> data = new HashMap<>();
+        data.put("text", text);
+        data.put("push", true);
+
+        return mFunctions
+                .getHttpsCallable("helloWorld")
+                .call(data)
+                .continueWith(new Continuation<HttpsCallableResult, String>() {
+                    @Override
+                    public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        String result = (String) task.getResult().getData();
+                        return result;
+                    }
+                });
+    }
+     */
+
 }
