@@ -4,11 +4,16 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.guillermobosca.tfg.R;
+import com.guillermobosca.tfg.databinding.FragmentNewCreatorBinding;
+import com.guillermobosca.tfg.databinding.FragmentNewUserBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +30,7 @@ public class NewCreatorFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private FragmentNewCreatorBinding binding;
 
     public NewCreatorFragment() {
         // Required empty public constructor
@@ -51,6 +57,11 @@ public class NewCreatorFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setExitTransition(inflater.inflateTransition(R.transition.fade));
+        setEnterTransition(inflater.inflateTransition(R.transition.fade));
+        setReenterTransition(inflater.inflateTransition(R.transition.fade));
+        setReturnTransition(inflater.inflateTransition(R.transition.fade));
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -61,6 +72,19 @@ public class NewCreatorFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_creator, container, false);
+        binding = FragmentNewCreatorBinding.inflate(inflater, container, false);
+
+        //ANIMATIONS
+        Animation atg_1 = AnimationUtils.loadAnimation(getContext(), R.anim.atg_1);
+        Animation atg_2 = AnimationUtils.loadAnimation(getContext(), R.anim.atg_2);
+        Animation atg_3 = AnimationUtils.loadAnimation(getContext(), R.anim.atg_3);
+        Animation atg_4 = AnimationUtils.loadAnimation(getContext(), R.anim.atg_4);
+
+        binding.txtNewartistfragUser.startAnimation(atg_1);
+        binding.txtNewartistfragEmail.startAnimation(atg_2);
+        binding.txtNewartistfragPassword.startAnimation(atg_3);
+        binding.btnNewartistfragEnter.startAnimation(atg_4);
+
+        return binding.getRoot();
     }
 }

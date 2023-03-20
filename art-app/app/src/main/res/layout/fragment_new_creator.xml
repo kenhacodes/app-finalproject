@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_darkblue"
-    android:backgroundTint="@color/background_darkblue"
+    android:background="#00FFFFFF"
+    android:backgroundTint="#00FFFFFF"
     android:padding="50dp"
     android:paddingBottom="150dp"
     tools:context=".ui.loginProcess.NewCreatorFragment">
@@ -56,6 +56,7 @@
             android:layout_marginTop="20dp"
             android:backgroundTint="#353B6E"
             android:padding="8dp"
-            android:text="@string/enter" />
+            android:text="@string/enter"
+            android:textColor="@color/white" />
     </LinearLayout>
 </FrameLayout>

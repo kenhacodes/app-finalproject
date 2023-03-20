@@ -1,5 +1,6 @@
 package com.guillermobosca.tfg;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -27,11 +28,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        /*
         mAuth = FirebaseAuth.getInstance();
 
         if (mAuth.getCurrentUser() != null) {
             showNavBar();
         }
+        */
+
 
     }
     @Override
@@ -41,22 +45,24 @@ public class MainActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        //Background animation
+
+        AnimationDrawable animationDrawable = (AnimationDrawable) binding.contenedorMain.getBackground();
+        animationDrawable.setEnterFadeDuration(1300);
+        animationDrawable.setExitFadeDuration(2500);
+        animationDrawable.start();
 
         binding.navView.setVisibility(View.INVISIBLE);
 
         //Show start fragment
-        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, new StartFragment()).commit();
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                .replace(R.id.nav_host_fragment_activity_main, new StartFragment()).commit();
 
-
-
-
-        /*
         //NAVBAR
-
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
         // Passing each menu ID as a set of Ids because each
@@ -65,16 +71,15 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_home, R.id.navigation_profile, R.id.navigation_search, R.id.navigation_messages)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
-
-         */
 
     }
     //TODO MAKE THIS WORK
     public void showNavBar(){
-        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, new HomeFragment()).commit();
-
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                .replace(R.id.nav_host_fragment_activity_main, new HomeFragment()).commit();
 
         binding.navView.setVisibility(View.VISIBLE);
 
@@ -89,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-
     }
+
+
 
 }
