@@ -124,13 +124,13 @@ public class NewUserFragment extends Fragment {
 
                 callcheckUserValid(user, email, password).addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
-                        Log.d("CALL RESULT", "SUCCESS");
+                        Log.d("CALL RESULT USER VALID", "SUCCESS");
                         Map result = (Map) task.getResult();
-                        Log.d("RESULT", result.get("status").toString());
-                        Log.d("RESULT", result.get("message").toString());
+                        Log.d("CALL RESULT USER VALID", result.get("status").toString());
+                        //Log.d("RESULT", result.get("message").toString());
                         if (result.get("status").toString().toLowerCase(Locale.ROOT).equals("ok")){
                             //Toast.makeText(getContext(), result.get("message").toString(), Toast.LENGTH_SHORT).show();
-
+                            Log.d("CALL RESULT USER VALID", "OK!");
                             //AUTH
                             mAuth.createUserWithEmailAndPassword(email, password)
                                     .addOnCompleteListener(task1 -> {
@@ -144,37 +144,41 @@ public class NewUserFragment extends Fragment {
 
                                             //Put username in database
                                             try {
-
-                                            }catch (Exception e){
-                                                Log.d("ERROR", e.getMessage());
-                                            }
-                                            callinsertUserdb(uid, user, email).addOnCompleteListener(task2 -> {
-                                                if (task2.isSuccessful()){
-                                                    Log.d("CALL RESULT", "SUCCESS");
-                                                    Map result2 = (Map) task2.getResult();
-                                                    Log.d("RESULT", result2.get("status").toString());
-                                                    Log.d("RESULT", result2.get("message").toString());
-                                                    if (result2.get("status").toString().toLowerCase(Locale.ROOT).equals("ok")){
-                                                        //Toast.makeText(getContext(), result2.get("message").toString(), Toast.LENGTH_SHORT).show();
-
-                                                        //Go to home fragment
-                                                        getActivity().getWindow().getDecorView().findViewById(R.id.nav_view).setVisibility(View.VISIBLE);
-
-                                                        FragmentManager fragmentManager = getParentFragmentManager();
-                                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                                        fragmentTransaction
-                                                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                                                                .replace(R.id.nav_host_fragment_activity_main, new HomeFragment());
-
-                                                        fragmentTransaction.commit();
+                                                callinsertUserdb(uid, user, email).addOnCompleteListener(task2 -> {
+                                                    if (task2.isSuccessful()){
+                                                        Log.d("CALL RESULT", "SUCCESS");
+                                                        Map result2 = (Map) task2.getResult();
+                                                        Log.d("RESULT", result2.get("status").toString());
+                                                        Log.d("RESULT", result2.get("message").toString());
 
 
-                                                    } else {
-                                                        Toast.makeText(getContext(), result2.get("message").toString(), Toast.LENGTH_SHORT).show();
+
+
+                                                        if (result2.get("status").toString().toLowerCase(Locale.ROOT).equals("ok")){
+                                                            Toast.makeText(getContext(), result2.get("message").toString(), Toast.LENGTH_SHORT).show();
+
+                                                        } else {
+                                                            Log.d("ERROR", result2.get("message").toString());
+                                                            Log.d("ERROR", result2.get("status").toString());
+                                                            Log.d("ERROR", result2.get("Error !!!").toString());
+                                                            Toast.makeText(getContext(), result2.get("message").toString(), Toast.LENGTH_SHORT).show();
+                                                        }
                                                     }
-                                                }
-                                            });
+                                                });
+                                            }catch (Exception e){
+                                                Log.d("ERROR", "ERROR");
+                                            }
 
+                                            //Go to home fragment
+                                            FragmentManager fragmentManager = getParentFragmentManager();
+                                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                                            getActivity().getWindow().getDecorView().findViewById(R.id.nav_view).setVisibility(View.VISIBLE);
+
+                                            fragmentTransaction
+                                                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                                                    .replace(R.id.nav_host_fragment_activity_main, new HomeFragment());
+                                            fragmentTransaction.commit();
 
 
 
@@ -220,8 +224,6 @@ public class NewUserFragment extends Fragment {
                     @Override
                     public Object then(@NonNull Task<HttpsCallableResult> task) throws Exception {
                         Map result = (Map) task.getResult().getData();
-                        Log.d("RESULT", result.get("status").toString());
-                        Log.d("RESULT", result.get("message").toString());
                         return result;
                     }
                 });
@@ -243,8 +245,8 @@ public class NewUserFragment extends Fragment {
                     @Override
                     public Object then(@NonNull Task<HttpsCallableResult> task) throws Exception {
                         Map result = (Map) task.getResult().getData();
-                        Log.d("RESULT", result.get("status").toString());
-                        Log.d("RESULT", result.get("message").toString());
+                        Log.d("RESULT INSERT USERDB", result.get("status").toString());
+                        Log.d("RESULT INSERT USERDB", result.get("message").toString());
                         return result;
                     }
                 });

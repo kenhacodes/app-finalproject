@@ -31,8 +31,6 @@ exports.getUserInfoBasic = functions.https.onCall(async (data, context) => {
   const uid = data.uid;
   const auth = context.auth;
 
-
-
 })
 
 
@@ -69,51 +67,54 @@ exports.insertUserdb = functions.https.onCall(async(data, context) => {
       usernamelow : usernameLowerCase,
       isArtist : isArtist
     }
-    
+
     try{
-      insert()
-    }catch(error){
-      if(error.includes("NOT_FOUND")){
-        try {
-          setTimeout(insert(), 5000)
-        } catch (error) {
-          return{status: "failed", message: "Server error: "+ error};
-        }
-        
-      }
-    }
-    async function insert (){
-      if(context.auth.uid == uid ){
-        try{
-          //Write in database
-          await db.collection('users').doc(uid).update({
-            email : email
-          });
-          await db.collection('users').doc(uid).update({
-            username : username
-          });
-          await db.collection('users').doc(uid).update({
-            usernamelow : usernameLowerCase
-          });
-          await db.collection('users').doc(uid).update({
-            isArtist : isArtist
-          });
-          //Return ok if correct
-          return {status: "ok", message: uid};
-    
-        }catch(error){
-          console.log(error);
-        }
+
+      
+        db.collection('users').doc(uid).get().then(async function(doc) {
+          if (doc.exists) {
+              
+            //Write in database
+            await db.collection('users').doc(uid).update({
+              email : email
+            });
+            await db.collection('users').doc(uid).update({
+              username : username
+            });
+            await db.collection('users').doc(uid).update({
+              usernamelow : usernameLowerCase
+            });
+            await db.collection('users').doc(uid).update({
+              isArtist : isArtist
+            });
+            //Return ok if correct
+            return {status: "ok", message: uid};
   
-      }else{
-        return {status: "failed", message: "You dont have access to this function."};
-      }
+          } else {
+            const dataUser = {
+              username : username,
+              email : email,
+              usernamelow : username.toLowerCase(),
+              isArtist : isArtist,
+              about : "Hi!",
+              isChecked : false,
+              icon : "",
+              followers : 0,
+              following : 0,
+            }
+        
+            //Write in database
+            await db.collection('users').doc(uid).set(dataUser);
+            return {status: "ok", message: uid};
+          }
+        })
+        
+    }catch(error){
+      console.log(error);
+      return {status: "failed", message: error};
     }
-    
-
-    
-
-})
+    }
+)
 
 // CHECK IF USER IS VALID
 exports.checkUserValid = functions.https.onCall(async (data) =>{
@@ -181,34 +182,45 @@ exports.checkUserValid = functions.https.onCall(async (data) =>{
 
 exports.autoNewUserDB = functions.auth.user().onCreate(async (user) => {
 
-  try{
-
-    const dataUser = {
-      username : user.email,
-      email : user.email,
-      usernamelow : user.email.toLowerCase(),
-      isArtist : false,
-      about : "Hi!",
-      isChecked : false,
-      icon : "",
-      followers : 0,
-      following : 0,
-    }
-
-    //Write in database
-    await db.collection('users').doc(user.uid).set(dataUser);
-    
-
-  }catch(error){
-    console.log("USER NOT CREATED IN DB! " + user.uid)
+  const dataUser = {
+    username : user.email,
+    email : user.email,
+    usernamelow : user.email.toLowerCase(),
+    isArtist : false,
+    about : "Hi!",
+    isChecked : false,
+    icon : "",
+    followers : 0,
+    following : 0,
   }
-  
-});
+
+  try{
+    db.collection('users').doc(uid).get().then(async function(doc) {
+      if (doc.exists) {
+        console.log("User already exists. Therefore not created. :)")
+      } else {
+        const dataUser = {
+          username : username,
+          email : email,
+          usernamelow : username.toLowerCase(),
+          isArtist : isArtist,
+          about : "Hi!",
+          isChecked : false,
+          icon : "",
+          followers : 0,
+          following : 0,
+        }
+        //Write in database
+        await db.collection('users').doc(uid).set(dataUser);
+      }
+    })}catch(error){
+        console.log(error)
+    }
+  })
 
 exports.autoDeleteUserDB = functions.auth.user().onDelete(async (user) => {
   const email = user.email;
   const uid = user.uid;
   const res = await db.collection('users').doc(uid).delete();
   console.log("USER DELETED FROM DATABASE " + email)
-
 });
